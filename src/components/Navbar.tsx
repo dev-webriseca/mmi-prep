@@ -18,14 +18,7 @@ export default function Navbar() {
           </div>
         </Link>
         <ul className="navbar-links">
-          <li>
-            <Link
-              href="/"
-              className={`navbar-link ${pathname === "/" ? "active" : ""}`}
-            >
-              Practice
-            </Link>
-          </li>
+
           <li>
             <Link
               href="/random"

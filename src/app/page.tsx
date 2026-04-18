@@ -39,23 +39,12 @@ export default function HomePage() {
       <section className="hero">
         <div className="hero-badge">✨ PA School Interview Prep</div>
         <h1>Hey Maryam, let&apos;s practice. 💪</h1>
-        <p>
-          You&apos;ve got {totalQuestions} unique MMI questions across 5 categories,
-          built specifically for PA school admissions. No fluff, no repeats
-          &mdash; just focused practice.
-        </p>
+
       </section>
 
       {/* Stats */}
       <div className="stats-bar">
-        <div className="stat-item">
-          <span className="stat-value">{totalQuestions}</span>
-          <span className="stat-label">Questions</span>
-        </div>
-        <div className="stat-item">
-          <span className="stat-value">{categories.length}</span>
-          <span className="stat-label">Categories</span>
-        </div>
+
         {categories.map((cat) => (
           <div className="stat-item" key={cat}>
             <span className="stat-value">

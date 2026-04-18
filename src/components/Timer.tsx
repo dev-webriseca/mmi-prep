@@ -3,7 +3,11 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { getTimerMinutes } from "@/lib/timerStore";
 
-export default function Timer() {
+interface TimerProps {
+  onIsRunningChange?: (isRunning: boolean) => void;
+}
+
+export default function Timer({ onIsRunningChange }: TimerProps = {}) {
   const initialSeconds = getTimerMinutes() * 60;
   const [totalSeconds, setTotalSeconds] = useState(initialSeconds);
   const [timeLeft, setTimeLeft] = useState(initialSeconds);
@@ -34,11 +38,13 @@ export default function Timer() {
     if (isDone) return;
     clearTimer();
     setIsRunning(true);
+    onIsRunningChange?.(true);
     intervalRef.current = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           clearTimer();
           setIsRunning(false);
+          onIsRunningChange?.(false);
           return 0;
         }
         return prev - 1;
@@ -49,13 +55,15 @@ export default function Timer() {
   const pauseTimer = useCallback(() => {
     clearTimer();
     setIsRunning(false);
-  }, [clearTimer]);
+    onIsRunningChange?.(false);
+  }, [clearTimer, onIsRunningChange]);
 
   const resetTimer = useCallback(() => {
     clearTimer();
     setIsRunning(false);
+    onIsRunningChange?.(false);
     setTimeLeft(totalSeconds);
-  }, [clearTimer, totalSeconds]);
+  }, [clearTimer, totalSeconds, onIsRunningChange]);
 
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
@@ -77,24 +85,27 @@ export default function Timer() {
             onClick={startTimer}
             title="Start"
             disabled={isDone}
+            style={{ width: 'auto', padding: '0 var(--space-md)' }}
           >
-            ▶
+            ▶ Start & Reg 🎙️
           </button>
         ) : (
           <button
             className="btn btn-secondary btn-icon"
             onClick={pauseTimer}
             title="Pause"
+            style={{ width: 'auto', padding: '0 var(--space-md)' }}
           >
-            ⏸
+            ⏸ Pause
           </button>
         )}
         <button
           className="btn btn-secondary btn-icon"
           onClick={resetTimer}
           title="Reset"
+          style={{ width: 'auto', padding: '0 var(--space-md)' }}
         >
-          ↺
+          ↺ Reset
         </button>
       </div>
     </div>

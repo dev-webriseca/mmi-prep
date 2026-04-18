@@ -1171,3 +1171,67 @@ a:hover {
     gap: var(--space-xs);
   }
 }
+
+/* ===== VOICE RECORDER ===== */
+.voice-recorder {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.voice-recorder.unsupported {
+  color: var(--accent-warning);
+  font-size: 0.85rem;
+  background: rgba(245, 158, 11, 0.1);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.btn-voice {
+  font-size: 0.8rem;
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-full);
+}
+
+.btn-recording {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--accent-danger);
+  border: 1px solid var(--accent-danger);
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+  animation: pulse-danger 2s infinite;
+}
+
+.btn-recording:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--accent-danger);
+  border-color: var(--accent-danger);
+}
+
+.recording-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: var(--accent-danger);
+  border-radius: 50%;
+  margin-right: 4px;
+  animation: blink 1s infinite;
+}
+
+.recording-status {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes pulse-danger {
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}

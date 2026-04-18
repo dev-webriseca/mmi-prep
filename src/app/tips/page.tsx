@@ -12,10 +12,7 @@ export default function TipsPage() {
       <section className="hero" style={{ paddingBottom: "32px" }}>
         <div className="hero-badge">📚 Strategy Guide</div>
         <h1>MMI Tips & Strategy</h1>
-        <p>
-          Master the frameworks and strategies that top PA school applicants use
-          to crush their MMI interviews.
-        </p>
+
       </section>
 
       <div style={{ maxWidth: 800, margin: "0 auto" }}>

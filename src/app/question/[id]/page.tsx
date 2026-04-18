@@ -4,7 +4,8 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { questions } from "@/data/questions";
 import Timer from "@/components/Timer";
-import { useState } from "react";
+import VoiceRecorder from "@/components/VoiceRecorder";
+import { useState, useCallback } from "react";
 
 function getCategoryTagClass(category: string): string {
   const map: Record<string, string> = {
@@ -22,6 +23,18 @@ export default function QuestionDetailPage() {
   const id = Number(params.id);
   const question = questions.find((q) => q.id === id);
   const [notes, setNotes] = useState("");
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handleTranscript = useCallback((text: string) => {
+    setNotes((prev) => prev ? prev + " " + text : text);
+  }, []);
+
+  const copyNotes = useCallback(() => {
+    navigator.clipboard.writeText(notes);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }, [notes]);
 
   if (!question) {
     return (
@@ -68,11 +81,25 @@ export default function QuestionDetailPage() {
       </div>
 
       {/* Timer */}
-      <Timer />
+      <Timer onIsRunningChange={setIsTimerRunning} />
 
       {/* Notes */}
       <div className="notes-section animate-in stagger-2" style={{ opacity: 0 }}>
-        <h3>📝 Your Response Notes</h3>
+        <div className="notes-section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-md)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-md)' }}>
+            <h3 style={{ margin: 0 }}>📝 Your Response Notes</h3>
+            <VoiceRecorder onTranscript={handleTranscript} isActive={isTimerRunning} />
+          </div>
+          <button 
+            className="btn btn-secondary" 
+            style={{ padding: '4px 8px', fontSize: '0.8rem' }}
+            onClick={copyNotes}
+            disabled={!notes}
+            title="Copy notes"
+          >
+            {copied ? '✅ Copied!' : '📋 Copy Text'}
+          </button>
+        </div>
         <textarea
           className="notes-textarea"
           placeholder="Outline your response, jot down key points, or draft your answer here..."

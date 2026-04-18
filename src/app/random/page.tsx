@@ -4,6 +4,7 @@ import { useState, useCallback, useRef } from "react";
 import Link from "next/link";
 import { questions, categories, Category } from "@/data/questions";
 import Timer from "@/components/Timer";
+import VoiceRecorder from "@/components/VoiceRecorder";
 
 function getCategoryTagClass(category: string): string {
   const map: Record<string, string> = {
@@ -34,6 +35,8 @@ export default function RandomPage() {
   const [animKey, setAnimKey] = useState(0); // bump to re-trigger CSS animation
   const [timerKey, setTimerKey] = useState(0); // bump to reset timer
   const [seen, setSeen] = useState<Set<number>>(new Set());
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const pool = activeCategory === "All"
     ? questions
@@ -53,6 +56,16 @@ export default function RandomPage() {
     setAnimKey((k) => k + 1);
     setTimerKey((k) => k + 1);
   }, [pool, currentQuestion, seen]);
+
+  const handleTranscript = useCallback((text: string) => {
+    setNotes((prev) => (prev ? prev + " " + text : text));
+  }, []);
+
+  const copyNotes = useCallback(() => {
+    navigator.clipboard.writeText(notes);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }, [notes]);
 
   const handleCategoryChange = (cat: Category | "All") => {
     setActiveCategory(cat);
@@ -76,10 +89,7 @@ export default function RandomPage() {
       <section className="hero" style={{ paddingBottom: "var(--space-xl)" }}>
         <div className="hero-badge">🎲 Random Practice</div>
         <h1>Surprise yourself, Maryam.</h1>
-        <p>
-          Randomized questions, one at a time — the closest thing to the real
-          MMI day. Filter by category or go fully random and trust the process.
-        </p>
+
       </section>
 
       {/* Category filter */}
@@ -138,11 +148,25 @@ export default function RandomPage() {
           </div>
 
           {/* Timer */}
-          <Timer key={timerKey} />
+          <Timer key={timerKey} onIsRunningChange={setIsTimerRunning} />
 
           {/* Notes */}
           <div className="notes-section">
-            <h3>📝 Your Response Notes</h3>
+            <div className="notes-section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-md)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-md)' }}>
+                <h3 style={{ margin: 0 }}>📝 Your Response Notes</h3>
+                <VoiceRecorder onTranscript={handleTranscript} isActive={isTimerRunning} />
+              </div>
+              <button 
+                className="btn btn-secondary" 
+                style={{ padding: '4px 8px', fontSize: '0.8rem' }}
+                onClick={copyNotes}
+                disabled={!notes}
+                title="Copy notes"
+              >
+                {copied ? '✅ Copied!' : '📋 Copy Text'}
+              </button>
+            </div>
             <textarea
               className="notes-textarea"
               placeholder="Outline your response, jot down key points, or draft your answer here..."

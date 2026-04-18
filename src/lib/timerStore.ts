@@ -1,5 +1,5 @@
 const KEY = "mmi-timer-minutes";
-export const DEFAULT_MINUTES = 8;
+export const DEFAULT_MINUTES = 5;
 export const PRESET_MINUTES = [5, 6, 7, 8, 10, 12];
 
 export function getTimerMinutes(): number {
